@@ -16,11 +16,38 @@ namespace loginjwt.Repository
         {
             _context = context;
         }
-        
+
         public User ValidateCredentials(UserVO user)
         {
             var pass = ComputeHash(user.Password, new SHA256CryptoServiceProvider());
             return _context.Users.FirstOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
+        }
+
+        public User RefreshUserInfo(User user)
+        {
+            // If user exists
+            if (_context.Users.Any(u => u.Id.Equals(user.Id)))
+            {
+            }
+
+            var result = _context.Users.SingleOrDefault(u => u.Id.Equals(user.Id));
+            if (result != null)
+            {
+                try
+                {
+                    _context.Entry(result).CurrentValues.SetValues(user);
+                    _context.SaveChanges();
+                    return result;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private string ComputeHash(string input, SHA256CryptoServiceProvider algorithm)
