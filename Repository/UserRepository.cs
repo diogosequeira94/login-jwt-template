@@ -23,6 +23,11 @@ namespace loginjwt.Repository
             return _context.Users.FirstOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
         }
 
+        public User ValidateCredentials(string username)
+        {
+            return _context.Users.SingleOrDefault(u => (u.UserName == username));
+        }
+
         public User RefreshUserInfo(User user)
         {
             // If user exists

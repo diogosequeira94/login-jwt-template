@@ -45,10 +45,10 @@ namespace loginjwt.Business
 
             //Persist in DataBase
             _repository.RefreshUserInfo(user);
-            
+
             DateTime createDate = DateTime.Now;
             DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
-            
+
             //Setting Token Info, if he reaches this point, the user is authenticated.
             return new TokenVO(
                 true,
@@ -57,6 +57,42 @@ namespace loginjwt.Business
                 accessToken,
                 refreshToken
             );
+        }
+
+        public TokenVO ValidateCredentials(TokenVO token)
+        {
+            var accessToken = token.AcessToken;
+            var refreshToken = token.RefreshToken;
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+
+            if (principal.Identity != null)
+            {
+                var username = principal.Identity.Name;
+
+                var user = _repository.ValidateCredentials(username);
+
+                accessToken = _tokenService.GenerateAccessToken(principal.Claims);
+                refreshToken = _tokenService.GenerateRefreshToken();
+
+                user.RefreshToken = refreshToken;
+
+                _repository.RefreshUserInfo(user);
+
+                DateTime createDate = DateTime.Now;
+                DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
+
+                //Setting Token Info, if he reaches this point, the user is authenticated.
+                return new TokenVO(
+                    true,
+                    createDate.ToString(DATE_FORMAT),
+                    expirationDate.ToString(DATE_FORMAT),
+                    accessToken,
+                    refreshToken
+                );
+            }
+
+            return null;
         }
     }
 }
