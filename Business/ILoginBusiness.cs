@@ -7,5 +7,6 @@ namespace loginjwt.Business
         TokenVO ValidateCredentials(UserVO user);
         //For Refresh Token
         TokenVO ValidateCredentials(TokenVO token);
+        bool RevokeToken(string username);
     }
 }

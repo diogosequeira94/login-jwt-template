@@ -16,6 +16,7 @@ namespace loginjwt.Business
 
         private IUserRepository _repository;
         private readonly ITokenService _tokenService;
+        private ILoginBusiness _loginBusinessImplementation;
 
         public LoginBusiness(TokenConfiguration configuration, IUserRepository repository, ITokenService tokenService)
         {
@@ -93,6 +94,11 @@ namespace loginjwt.Business
             }
 
             return null;
+        }
+
+        public bool RevokeToken(string username)
+        {
+            return _repository.RevokeToken(username);
         }
     }
 }
