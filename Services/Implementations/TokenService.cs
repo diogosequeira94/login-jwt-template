@@ -48,8 +48,6 @@ namespace loginjwt.Services.Implementations
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
             }
-
-            ;
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
