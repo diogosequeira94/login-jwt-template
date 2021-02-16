@@ -26,9 +26,7 @@ namespace loginjwt.Repository
         public User RefreshUserInfo(User user)
         {
             // If user exists
-            if (_context.Users.Any(u => u.Id.Equals(user.Id)))
-            {
-            }
+            if (!_context.Users.Any(u => u.Id.Equals(user.Id))) return null;
 
             var result = _context.Users.SingleOrDefault(u => u.Id.Equals(user.Id));
             if (result != null)
