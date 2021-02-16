@@ -42,10 +42,14 @@ namespace loginjwt.Controllers
         [Authorize("Bearer")]
         public IActionResult Revoke()
         {
-            var username = User.Identity.Name;
-            var result = _loginBusiness.RevokeToken(username);
+            if (User.Identity != null)
+            {
+                var username = User.Identity.Name;
+                var result = _loginBusiness.RevokeToken(username);
 
-            if (!result) return BadRequest("Invalid client request");
+                if (!result) return BadRequest("Invalid client request");
+            }
+
             return NoContent();
         }
     }
